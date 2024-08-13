@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Hub Dice Roller</title>
+  <style>
+    body {
+      background-color: #2E2E2E;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    .container {
+      margin: 0 auto;
+      padding: 20px;
+      width: 500px;
+      display: none; /* Hide main content initially */
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .button-frame {
+      margin: 20px 0;
+    }
+
+    button {
+      background-color: #4C4C4C;
+      color: white;
+      font-size: 12px;
+      padding: 10px 15px;
+      margin: 10px;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #6E6E6E;
+    }
+
+    .result {
+      font-size: 24px; /* Increase font size */
+      margin: 20px 0;
+      text-align: center; /* Center the text */
+    }
+
+    input {
+      width: 100px;
+      padding: 5px;
+      margin: 10px;
+      border: 1px solid #4C4C4C;
+      background-color: #4C4C4C;
+      color: white;
+    }
+
+    .loading-screen {
+      display: flex; /* Enable flexbox */
+      justify-content: center; /* Center horizontally */
+      align-items: center; /* Center vertically */
+      height: 100vh; /* Full height of the viewport */
+      background-color: rgba(46, 46, 46, 0.9); /* Optional: add a semi-transparent background */
+      opacity: 1; /* Default opacity */
+      transition: opacity 0.5s ease; /* Add transition for opacity */
+    }
+
+    .spinner {
+      width: 300px; /* Adjust the size as needed */
+      height: auto;
+      animation: spin 1s linear infinite; /* Add spinning animation */
+    }
+
+    .spinner1 {
+      width: 300px; /* Adjust the size as needed */
+      height: auto;
+      animation: spin 2s linear infinite; /* Add spinning animation */
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- AI Hub Loading Screen -->
+  <div id="aiLoadingScreen" class="loading-screen">
+    <div>
+      <h1 style="font-size: 500%;">Loading AI Hub Dice Roller.</h1>
+      <img src="200.gif" alt="Loading..." class="spinner">
+    </div>
+  </div>
+
+  <!-- Loading Screen for Dice Roller -->
+  <div id="loadingScreen" class="loading-screen hidden">
+    <div>
+      <h1 style="font-size: 500%;">Rolling Dice...</h1>
+      <img src="dice-removebg-preview.png" alt="Loading..." class="spinner1">
+    </div>
+  </div>
+
+  <div class="container" id="mainContent">
+    <h1 style="font-size: 250%;">AI Hub Dice Roller</h1>
+    <div class="button-frame">
+      <input type="number" id="diceCount" min="1" max="55" placeholder="Number of Dice (1-55)">
+      <button onclick="rollDice()">Roll Dice</button>
+    </div>
+    <div id="result" class="result"></div>
+    <button onclick="goBack()">Back to AI Hub</button>
+  </div>
+
+  <script>
+    // Show the AI Hub loading screen initially
+    window.onload = function() {
+      const aiLoadingScreen = document.getElementById("aiLoadingScreen");
+      setTimeout(() => {
+        aiLoadingScreen.style.opacity = '0'; // Fade out AI Hub loading screen
+        setTimeout(() => {
+          aiLoadingScreen.classList.add("hidden"); // Hide AI Hub loading screen after fade
+          document.getElementById("mainContent").style.display = 'block'; // Show main content
+        }, 500); // Match this duration to the CSS transition duration
+      }, 2000); // Show the AI Hub loading screen for 2 seconds
+    };
+
+    function showResult(message) {
+      const resultDiv = document.getElementById("result");
+      resultDiv.textContent = message;
+    }
+
+    function goBack() {
+      window.location.href = 'index.html'; // Redirect to index.html
+    }
+
+    function rollDice() {
+      const loadingScreen = document.getElementById("loadingScreen");
+      loadingScreen.classList.remove("hidden"); // Show loading screen
+      loadingScreen.style.opacity = '1'; // Ensure loading screen is fully visible
+
+      const diceCount = parseInt(document.getElementById("diceCount").value) || 1;
+
+      setTimeout(() => {
+        const rolls = [];
+        for (let i = 0; i < diceCount; i++) {
+          rolls.push(Math.floor(Math.random() * 6) + 1); // Roll a six-sided die
+        }
+        showResult(`You rolled: ${rolls.join(', ')}`);
+
+        loadingScreen.style.opacity = '0'; // Fade out loading screen
+        setTimeout(() => {
+          loadingScreen.classList.add("hidden"); // Hide loading screen after fade
+        }, 500); // Match this duration to the CSS transition duration
+      }, 1000); // Delay for 1 second before displaying the result
+    }
+  </script>
+</body>
+</html>

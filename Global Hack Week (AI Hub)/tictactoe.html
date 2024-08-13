@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Hub Tic Tac Toe</title>
+    <style>
+        body {
+            background-color: #2E2E2E;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .loading-screen {
+            display: flex; /* Enable flexbox */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            height: 100vh; /* Full height of the viewport */
+            background-color: rgba(46, 46, 46, 0.9); /* Optional: add a semi-transparent background */
+            opacity: 1; /* Default opacity */
+            transition: opacity 0.5s ease; /* Add transition for opacity */
+        }
+
+        .spinner {
+            width: 300px; /* Adjust the size as needed */
+            height: auto;
+            animation: spin 2s linear infinite; /* Add spinning animation */
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .container {
+            margin: 0 auto;
+            padding: 20px;
+            width: 320px;
+            display: none; /* Hide main content initially */
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            margin: 20px 0;
+        }
+
+        .cell {
+            width: 80px;
+            height: 80px;
+            background-color: #4C4C4C;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .cell:hover {
+            background-color: #6E6E6E;
+        }
+
+        .cell.x {
+            color: #FF5733; /* X color */
+            transform: scale(1.1);
+        }
+
+        .cell.o {
+            color: #33B5FF; /* O color */
+            transform: scale(1.1);
+        }
+
+        button {
+            background-color: #4C4C4C;
+            color: white;
+            font-size: 14px;
+            padding: 10px 15px;
+            margin: 10px 0;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #6E6E6E;
+        }
+
+        select {
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #4C4C4C;
+            background-color: #4C4C4C;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .result {
+            font-size: 24px;
+            margin: 20px 0;
+            height: 30px; /* Fixed height for consistent layout */
+        }
+
+        .back-button {
+            background-color: #ff4c4c; /* Different color for visibility */
+        }
+
+        .back-button:hover {
+            background-color: #ff7878;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- AI Hub Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div>
+            <h1 style="font-size: 500%;">Loading AI Hub Tic Tac Toe</h1>
+            <img src="200.gif" alt="Loading..." class="spinner">
+        </div>
+    </div>
+
+    <div class="container" id="mainContent">
+        <h1>AI Hub Tic Tac Toe</h1>
+        <select id="difficultySelect">
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+        </select>
+        <div class="board" id="board"></div>
+        <div id="result" class="result"></div>
+        <button onclick="restartGame()">Restart Game</button>
+        <button class="back-button" onclick="goBack()">Back to AI Hub</button>
+    </div>
+
+    <script>
+        const boardElement = document.getElementById("board");
+        const resultElement = document.getElementById("result");
+        const difficultySelect = document.getElementById("difficultySelect");
+        let board = ['', '', '', '', '', '', '', '', ''];
+        let currentPlayer = 'X'; // Player is X, AI is O
+        let gameActive = true;
+
+        window.onload = function() {
+            // Show loading screen for 2 seconds
+            setTimeout(() => {
+                document.getElementById("loadingScreen").style.opacity = '0'; // Fade out loading screen
+                setTimeout(() => {
+                    document.getElementById("loadingScreen").style.display = 'none'; // Hide loading screen after fade
+                    document.getElementById("mainContent").style.display = 'block'; // Show main content
+                }, 500); // Match this duration to the CSS transition duration
+            }, 2000); // Display loading screen for 2 seconds
+
+            createBoard();
+        };
+
+        function createBoard() {
+            boardElement.innerHTML = '';
+            board.forEach((cell, index) => {
+                const cellElement = document.createElement("div");
+                cellElement.className = 'cell';
+                cellElement.textContent = cell;
+                cellElement.onclick = () => handleCellClick(index);
+                boardElement.appendChild(cellElement);
+            });
+        }
+
+        function handleCellClick(index) {
+            if (board[index] !== '' || !gameActive) return;
+            board[index] = currentPlayer;
+            createBoard();
+            animateCell(index, currentPlayer);
+            checkResult();
+            if (gameActive) {
+                currentPlayer = 'O'; // Switch to AI
+                setTimeout(aiMove, 500); // Add delay for AI move
+            }
+        }
+
+        function animateCell(index, player) {
+            const cell = boardElement.children[index];
+            cell.classList.add(player.toLowerCase());
+            cell.textContent = player; // Set the player's symbol
+            setTimeout(() => {
+                cell.classList.remove(player.toLowerCase()); // Remove animation class
+            }, 300); // Duration of the animation
+        }
+
+        function aiMove() {
+            const difficulty = difficultySelect.value;
+            let index;
+
+            if (difficulty === 'easy') {
+                index = getRandomEmptyCell();
+            } else if (difficulty === 'medium') {
+                index = mediumAiMove();
+            } else {
+                index = hardAiMove();
+            }
+
+            if (index !== undefined) {
+                board[index] = currentPlayer;
+                createBoard();
+                animateCell(index, currentPlayer);
+                checkResult();
+                if (gameActive) {
+                    currentPlayer = 'X'; // Switch back to player
+                }
+            }
+        }
+
+        function getRandomEmptyCell() {
+            const emptyCells = board.map((cell, index) => (cell === '' ? index : null)).filter(x => x !== null);
+            return emptyCells[Math.floor(Math.random() * emptyCells.length)];
+        }
+
+        function mediumAiMove() {
+            // Check if AI can win in the next move
+            for (let i = 0; i < 9; i++) {
+                if (board[i] === '') {
+                    board[i] = 'O';
+                    if (checkWin('O')) {
+                        board[i] = 'O';
+                        return i;
+                    }
+                    board[i] = ''; // Reset
+                }
+            }
+            // Block player's winning move
+            for (let i = 0; i < 9; i++) {
+                if (board[i] === '') {
+                    board[i] = 'X';
+                    if (checkWin('X')) {
+                        board[i] = 'O';
+                        return i;
+                    }
+                    board[i] = ''; // Reset
+                }
+            }
+            // If no immediate wins or blocks, pick a random cell
+            return getRandomEmptyCell();
+        }
+
+        function hardAiMove() {
+            // Implement Minimax algorithm for hard difficulty
+            const bestMove = minimax(board, 'O');
+            return bestMove.index;
+        }
+
+        function minimax(newBoard, player) {
+            const availableCells = newBoard.map((cell, index) => (cell === '' ? index : null)).filter(x => x !== null);
+
+            // Check for terminal states
+            if (checkWin('X')) return { score: -10 };
+            if (checkWin('O')) return { score: 10 };
+            if (availableCells.length === 0) return { score: 0 };
+
+            const moves = [];
+
+            availableCells.forEach(cell => {
+                newBoard[cell] = player;
+                const result = minimax(newBoard, player === 'O' ? 'X' : 'O');
+                moves.push({ index: cell, score: result.score });
+                newBoard[cell] = ''; // Reset
+            });
+
+            let bestMove;
+            if (player === 'O') {
+                let bestScore = -Infinity;
+                moves.forEach(move => {
+                    if (move.score > bestScore) {
+                        bestScore = move.score;
+                        bestMove = move;
+                    }
+                });
+            } else {
+                let bestScore = Infinity;
+                moves.forEach(move => {
+                    if (move.score < bestScore) {
+                        bestScore = move.score;
+                        bestMove = move;
+                    }
+                });
+            }
+
+            return bestMove;
+        }
+
+        function checkWin(player) {
+            const winConditions = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8], // Horizontal
+                [0, 3, 6], [1, 4, 7], [2, 5, 8], // Vertical
+                [0, 4, 8], [2, 4, 6] // Diagonal
+            ];
+            return winConditions.some(condition => {
+                return condition.every(index => board[index] === player);
+            });
+        }
+
+        function checkResult() {
+            if (checkWin('X')) {
+                resultElement.textContent = "Player X Wins!";
+                gameActive = false;
+            } else if (checkWin('O')) {
+                resultElement.textContent = "Player O Wins!";
+                gameActive = false;
+            } else if (board.every(cell => cell !== '')) {
+                resultElement.textContent = "It's a Tie!";
+                gameActive = false;
+            }
+        }
+
+        function restartGame() {
+            board = ['', '', '', '', '', '', '', '', ''];
+            currentPlayer = 'X';
+            gameActive = true;
+            resultElement.textContent = '';
+            createBoard();
+        }
+
+        function goBack() {
+            window.location.href = 'index.html'; // Redirect to AI Hub
+        }
+
+        // Initialize the game
+        createBoard();
+    </script>
+</body>
+</html>

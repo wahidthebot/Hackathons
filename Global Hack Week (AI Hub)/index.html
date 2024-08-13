@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Hub</title>
+
+  <style>
+    body {
+      background-color: #2E2E2E;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      overflow: hidden;
+      /* Prevent scrolling during loading */
+    }
+
+    .container {
+      margin: 0 auto;
+      padding: 20px;
+      width: 500px;
+    }
+
+    @keyframes blink {
+        0% { opacity: 1; }
+        50% { opacity: 0; }
+        100% { opacity: 1; }
+    }
+    
+    h1 {
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .button-frame {
+      margin: 20px 0;
+    }
+
+    button {
+      background-color: #4C4C4C;
+      color: white;
+      font-size: 12px;
+      padding: 10px 15px;
+      margin: 10px;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #6E6E6E;
+    }
+
+    .result {
+      font-size: 14px;
+      margin: 20px 0;
+    }
+
+    input,
+    select {
+      width: 200px;
+      padding: 5px;
+      margin: 10px;
+      border: 1px solid #4C4C4C;
+      background-color: #4C4C4C;
+      color: white;
+    }
+
+    input::placeholder {
+      color: grey;
+    }
+
+    .loading-screen {
+      display: flex; /* Enable flexbox */
+      justify-content: center; /* Center horizontally */
+      align-items: center; /* Center vertically */
+      height: 100vh; /* Full height of the viewport */
+      background-color: rgba(46, 46, 46, 0.9); /* Optional: add a semi-transparent background */
+      opacity: 1; /* Default opacity */
+      transition: opacity 0.5s ease; /* Add transition for opacity */
+    }
+
+    .spinner {
+      width: 100px; /* Adjust the size as needed */
+      height: auto;
+      animation: spin 2.8s linear infinite; /* Add spinning animation */
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+
+    .hidden {
+      display: none;
+    }
+
+    .game-window {
+      background-color: #2E2E2E;
+      padding: 20px;
+      border: 1px solid white;
+      position: relative;
+    }
+
+    .close-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #FF5C5C;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-gap: 10px;
+      margin: 20px 0;
+    }
+
+    .grid button {
+      width: 100px;
+      height: 100px;
+      font-size: 24px;
+    }
+
+    .play-again-button {
+      margin-top: 20px;
+    }
+
+    #logo{
+        height: 500px;
+        width: 500px;
+    }
+
+    #loading_loading_text {
+    font-size: 300%;
+    animation: blink 2.5s infinite;
+  </style>
+</head>
+
+<body>
+  <div id="loadingScreen" class="loading-screen">
+    <div>
+      <img id="logo" src="200.gif" alt="Loading..." class="spinner" >
+        <h1 id = "loading_loading_text">Loading...</h1>
+    </div>
+  </div>
+  <h1 style="font-size: 500%;"> AI Hub </h1>
+ 
+  
+  <div class="button-frame">
+    <button 
+      style="background-color: #4C4C4C; color: white; font-size: 20px; padding: 20px 30px; margin: 15px; border: none; cursor: pointer; border-radius: 8px; transition: background-color 0.3s; width: 100%; max-width: 400px;" 
+      onmouseover="this.style.backgroundColor='#6E6E6E';" 
+      onmouseout="this.style.backgroundColor='#4C4C4C';" 
+      onclick="location.href='Phonenum.html'">Phone Number Generator</button>
+
+    <button 
+      style="background-color: #4C4C4C; color: white; font-size: 20px; padding: 20px 30px; margin: 15px; border: none; cursor: pointer; border-radius: 8px; transition: background-color 0.3s; width: 100%; max-width: 400px;" 
+      onmouseover="this.style.backgroundColor='#6E6E6E';" 
+      onmouseout="this.style.backgroundColor='#4C4C4C';" 
+      onclick="location.href='numgen.html'">Number Generator</button>
+
+    <button 
+      style="background-color: #4C4C4C; color: white; font-size: 20px; padding: 20px 30px; margin: 15px; border: none; cursor: pointer; border-radius: 8px; transition: background-color 0.3s; width: 100%; max-width: 400px;" 
+      onmouseover="this.style.backgroundColor='#6E6E6E';" 
+      onmouseout="this.style.backgroundColor='#4C4C4C';" 
+      onclick="location.href='Diceroll.html'">AI Dice Roller</button>
+
+    <button 
+      style="background-color: #4C4C4C; color: white; font-size: 20px; padding: 20px 30px; margin: 15px; border: none; cursor: pointer; border-radius: 8px; transition: background-color 0.3s; width: 100%; max-width: 400px;" 
+      onmouseover="this.style.backgroundColor='#6E6E6E';" 
+      onmouseout="this.style.backgroundColor='#4C4C4C';" 
+      onclick="location.href='tictactoe.html'">AI Tic-Tac-Toe</button>
+
+  
+
+    <button 
+      style="background-color: #4C4C4C; color: white; font-size: 20px; padding: 20px 30px; margin: 15px; border: none; cursor: pointer; border-radius: 8px; transition: background-color 0.3s; width: 100%; max-width: 400px;" 
+      onmouseover="this.style.backgroundColor='#6E6E6E';" 
+      onmouseout="this.style.backgroundColor='#4C4C4C';" 
+      onclick="location.href='http://127.0.0.1:5000/'">AI weather</button>
+
+    <button 
+      style="background-color: #4C4C4C; color: white; font-size: 20px; padding: 20px 30px; margin: 15px; border: none; cursor: pointer; border-radius: 8px; transition: background-color 0.3s; width: 100%; max-width: 400px;" 
+      onmouseover="this.style.backgroundColor='#6E6E6E';" 
+      onmouseout="this.style.backgroundColor='#4C4C4C';" 
+      onclick="location.href='Spam.html'">AI Spam Detector</button>
+
+  </div>
+ 
+
+
+
+
+
+  <script>
+    // Function to hide the loading screen and show the main content
+    function hideLoadingScreen() {
+      const loadingScreen = document.getElementById("loadingScreen");
+      loadingScreen.style.opacity = '0'; // Fade out
+      setTimeout(() => {
+        loadingScreen.classList.add("hidden"); // Hide after transition
+        document.getElementById("mainContent").classList.remove("hidden");
+        document.body.style.overflow = ''; // Enable scrolling
+      }, 500); // Match this duration to the CSS transition duration
+    }
+
+
+    // Call hideLoadingScreen after a short delay to simulate loading
+    setTimeout(hideLoadingScreen, 4000); // Adjust the duration as needed
+
+    function showPhoneNumberOptions() {
+      document.getElementById("phoneOptions").classList.toggle("hidden");
+    }
+
+    function updateStates() {
+      const countrySelect = document.getElementById("countrySelect");
+      const stateSelect = document.getElementById("stateSelect");
+      const country = countrySelect.value;
+
+      // Clear previous options
+      stateSelect.innerHTML = "";
+      stateSelect.classList.remove("hidden");
+
+      if (country === "US") {
+        stateSelect.innerHTML = `
+                    <option value="">Select State</option>
+                    <option value="NY">New York</option>
+                    <option value="CA">California</option>
+                    <option value="TX">Texas</option>
+                `;
+      } else if (country === "CA") {
+        stateSelect.innerHTML = `
+                    <option value="">Select Province</option>
+                    <option value="ON">Ontario</option>
+                    <option value="QC">Quebec</option>
+                    <option value="BC">British Columbia</option>
+                `;
+      } else if (country === "IN") {
+        stateSelect.innerHTML = `
+                    <option value="">Select State</option>
+                    <option value="MH">Maharashtra</option>
+                    <option value="DL">Delhi</option>
+                    <option value="KA">Karnataka</option>
+                `;
+      } else {
+        stateSelect.classList.add("hidden");
+      }
+    }
+
+    function showResult(message) {
+      const resultDiv = document.getElementById("result");
+      resultDiv.textContent = message;
+    }
+
+    function generatePhoneNumber() {
+      const countrySelect = document.getElementById("countrySelect");
+      const stateSelect = document.getElementById("stateSelect");
+      const country = countrySelect.value;
+      const state = stateSelect.value;
+
+      let phoneNumber = "";
+
+      if (country === "US") {
+        const areaCode = state === "NY" ? "212" : state === "CA" ? "415" : state === "TX" ? "512" : "000";
+        phoneNumber = `(${areaCode}) ${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}`;
+      } else if (country === "CA") {
+        const areaCode = state === "ON" ? "416" : state === "QC" ? "514" : state === "BC" ? "604" : "000";
+        phoneNumber = `(${areaCode}) ${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}`;
+      } else if (country === "IN") {
+        const areaCode = state === "MH" ? "22" : state === "DL" ? "11" : state === "KA" ? "80" : "000";
+        phoneNumber = `${areaCode}-${Math.floor(Math.random() * 9000000000) + 1000000000}`;
+      }
+
+      showResult(`Generated Phone Number: ${phoneNumber}`);
+      document.getElementById("phoneOptions").classList.add("hidden");
+      document.getElementById("countrySelect").selectedIndex = 0;
+      document.getElementById("stateSelect").innerHTML = "";
+    }
+
+    function showError(message) {
+      const errorText = document.getElementById("errorText");
+      const errorMessage = document.getElementById("errorMessage");
+      errorText.textContent = message;
+      errorMessage.classList.remove("hidden");
+    }
+
+    function closeError() {
+      const errorMessage = document.getElementById("errorMessage");
+      errorMessage.classList.add("hidden");
+    }
+
+    function generateRandomNumber() {
+      const limitInput = document.getElementById("limitInput");
+      if (limitInput.classList.contains("hidden")) {
+        limitInput.classList.remove("hidden");
+        limitInput.value = "Enter a limit";
+        limitInput.focus();
+      } else {
+        const limit = parseInt(limitInput.value);
+        if (!isNaN(limit) && limit > 0) {
+          const randomNumber = Math.floor(Math.random() * limit) + 1;
+          showResult(`Generated Number: ${randomNumber}`);
+          limitInput.classList.add("hidden");
+          closeError();  // Close any previous error message
+        } else {
+          showError("Please enter a valid number greater than 0.");
+        }
+      }
+    }
+
+    function rollDice() {
+      const diceInput = document.getElementById("diceInput");
+      if (diceInput.classList.contains("hidden")) {
+        diceInput.classList.remove("hidden");
+        diceInput.value = "Enter number of dice (1-5)";
+        diceInput.focus();
+      } else {
+        const numDice = parseInt(diceInput.value);
+        if (!isNaN(numDice) && numDice >= 1 && numDice <= 5) {
+          let rolls = [];
+          for (let i = 0; i < numDice; i++) {
+            rolls.push(Math.floor(Math.random() * 6) + 1);
+          }
+          showResult(`Dice Rolls: ${rolls.join(", ")}`);
+          diceInput.classList.add("hidden");
+          closeError();  // Close any previous error message
+        } else {
+          showError("Please enter a valid number between 1 and 5.");
+        }
+      }
+    }
+
+    function playTicTacToe() {
+      const gameWindow = document.createElement("div");
+      gameWindow.classList.add("game-window");
+      const closeButton = document.createElement("button");
+      closeButton.textContent = "Close";
+      closeButton.classList.add("close-button");
+      closeButton.onclick = () => {
+        gameWindow.remove();
+      };
+      gameWindow.appendChild(closeButton);
+
+      const grid = document.createElement("div");
+      grid.classList.add("grid");
+      const board = ['', '', '', '', '', '', '', '', ''];
+      let currentPlayer = 'X';
+      const statusLabel = document.createElement("div");
+      statusLabel.className = "result";
+      statusLabel.textContent = "Player X's turn";
+      gameWindow.appendChild(statusLabel);
+
+      const playAgainButton = document.createElement("button");
+      playAgainButton.textContent = "Play Again";
+      playAgainButton.classList.add("play-again-button", "hidden");
+      playAgainButton.onclick = resetGame; // Directly call resetGame
+      gameWindow.appendChild(playAgainButton);
+
+      for (let i = 0; i < 9; i++) {
+        const button = document.createElement("button");
+        button.textContent = '';
+        button.onclick = () => onClick(i, button);
+        grid.appendChild(button);
+      }
+      gameWindow.appendChild(grid);
+      document.body.appendChild(gameWindow);
+
+      function onClick(index, button) {
+        if (!board[index] && currentPlayer === 'X') {
+          board[index] = currentPlayer;
+          button.textContent = currentPlayer; // Update button text
+          updateBoard();
+          if (checkWinner(currentPlayer)) {
+            statusLabel.textContent = `Player ${currentPlayer} wins!`;
+            disableButtons();
+            showPlayAgainButton(); // Show Play Again button
+          } else if (!board.includes('')) {
+            statusLabel.textContent = "It's a tie!";
+            showPlayAgainButton(); // Show Play Again button
+          } else {
+            currentPlayer = 'O';
+            statusLabel.textContent = "Player O's turn";
+            aiMove(1); // Call AI move with normal difficulty
+          }
+        }
+      }
+
+      function aiMove(difficulty) {
+        let move;
+        if (difficulty === 1) {
+          move = Math.floor(Math.random() * 9);
+          while (board[move]) {
+            move = Math.floor(Math.random() * 9);
+          }
+        } else {
+          // Implement more difficult AI logic if desired
+        }
+        board[move] = currentPlayer;
+        updateBoard();
+        if (checkWinner(currentPlayer)) {
+          statusLabel.textContent = `Player ${currentPlayer} wins!`;
+          disableButtons();
+          showPlayAgainButton(); // Show Play Again button
+        } else if (!board.includes('')) {
+          statusLabel.textContent = "It's a tie!";
+          showPlayAgainButton(); // Show Play Again button
+        } else {
+          currentPlayer = 'X';
+          statusLabel.textContent = "Player X's turn";
+        }
+      }
+
+      function updateBoard() {
+        const buttons = grid.querySelectorAll("button");
+        buttons.forEach((button, index) => {
+          button.textContent = board[index];
+        });
+      }
+
+      function checkWinner(player) {
+        const winPatterns = [
+          [0, 1, 2],
+          [3, 4, 5],
+          [6, 7, 8],
+          [0, 3, 6],
+          [1, 4, 7],
+          [2, 5, 8],
+          [0, 4, 8],
+          [2, 4, 6],
+        ];
+
+        return winPatterns.some(pattern => 
+          pattern.every(index => board[index] === player)
+        );
+      }
+
+      function disableButtons() {
+        const buttons = grid.querySelectorAll("button");
+        buttons.forEach(button => button.disabled = true);
+      }
+
+      function showPlayAgainButton() {
+        playAgainButton.classList.remove("hidden"); // Show the Play Again button
+      }
+
+      function resetGame() {
+        board.fill('');
+        currentPlayer = 'X';
+        statusLabel.textContent = "Player X's turn";
+        updateBoard();
+        playAgainButton.classList.add("hidden"); // Hide the button
+        const buttons = grid.querySelectorAll("button");
+        buttons.forEach(button => {
+          button.disabled = false; // Enable buttons again
+          button.textContent = ''; // Clear button text
+        });
+      }
+    }
+  </script>
+</body>
+
+</html>
